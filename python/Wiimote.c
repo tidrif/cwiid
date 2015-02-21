@@ -70,6 +70,7 @@ static int
 static PyObject *Wiimote_send_rpt(Wiimote *self, PyObject *args, PyObject *kwds);
 static PyObject *Wiimote_read(Wiimote *self, PyObject *args, PyObject *kwds);
 static PyObject *Wiimote_write(Wiimote *self, PyObject *args, PyObject *kwds);
+static PyObject *Wiimote_beep(Wiimote *self, PyObject *args, PyObject *kwds);
 
 /* helper prototypes */
 static cwiid_mesg_callback_t CallbackBridge;
