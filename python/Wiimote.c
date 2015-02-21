@@ -100,6 +100,8 @@ static PyMethodDef Wiimote_Methods[] =
 	 "send_rpt(flags,report,buffer)\n\nsend a report to Wiimote"},
 	{"write", (PyCFunction)Wiimote_write, METH_VARARGS | METH_KEYWORDS,
 	 "write(flags,offset,buffer)\n\nwrite data to Wiimote"},
+	{"beep", (PyCFunction)Wiimote_beep, METH_NOARGS,
+	 "beep to Wiimote"},
 	{NULL, NULL, 0, NULL}
 };
 
@@ -837,6 +839,32 @@ static PyObject *Wiimote_write(Wiimote *self, PyObject *args, PyObject *kwds)
 
 	if (cwiid_write(self->wiimote, flags, offset, len, buf)) {
 		PyErr_SetString(PyExc_RuntimeError, "Error writing wiimote data");
+		return NULL;
+	}
+
+	Py_RETURN_NONE;
+}
+
+static PyObject *Wiimote_beep(Wiimote *self, PyObject *args, PyObject *kwds)
+{
+	static char *kwlist[] = { "flags", "offset", "buffer", NULL };
+	unsigned char flags;
+	unsigned int offset;
+	void *buf;
+	int len;
+
+	if (!self->wiimote) {
+		SET_CLOSED_ERROR;
+		return NULL;
+	}
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "BIt#:cwiid.Wiimote.beep",
+	                                 kwlist, &flags, &offset, &buf, &len)) {
+		return NULL;
+	}
+
+	if (cwiid_beep(self->wiimote)) {
+		PyErr_SetString(PyExc_RuntimeError, "Error beep wiimote data");
 		return NULL;
 	}
 
